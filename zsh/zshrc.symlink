@@ -1,0 +1,88 @@
+
+#### FIG ENV VARIABLES ####
+# Please make sure this block is at the start of this file.
+[ -s ~/.fig/shell/pre.sh ] && source ~/.fig/shell/pre.sh
+#### END FIG ENV VARIABLES ####
+
+#### FIG ENV VARIABLES ####
+# Please make sure this block is at the start of this file.
+# [ -s ~/dotfiles/fig/shell/pre.sh ] && source ~/dotfiles/fig/shell/pre.sh
+#### END FIG ENV VARIABLES ####
+
+
+# shortcut to this dotfiles path is $ZSH
+export ZSH=$HOME/.dotfiles
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
+
+# your project folder that we can `c [tab]` to
+export PROJECTS=~/Code
+
+export VISUAL="code -w"
+export EDITOR="code -w"
+
+
+# Stash your environment variables in ~/.localrc. This means they'll stay out
+# of your main dotfiles repository (which may be public, like this one), but
+# you'll have access to them in your scripts.
+if [[ -a ~/.localrc ]]
+then
+  source ~/.localrc
+fi
+
+# all of our zsh files
+typeset -U config_files
+config_files=($ZSH/**/*.zsh)
+
+# load the path files
+for file in ${(M)config_files:#*/path.zsh}
+do
+  source $file
+done
+
+# load everything but the path and completion files
+for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
+do
+  source $file
+done
+
+# initialize autocomplete here, otherwise functions won't be loaded
+autoload -U compinit
+compinit
+
+# load every completion after autocomplete loads
+for file in ${(M)config_files:#*/completion.zsh}
+do
+  source $file
+done
+
+
+# starship
+export STARSHIP_CONFIG=$ZSH/starship/starship.toml
+eval "$(starship init zsh)"
+
+unset config_files
+unsetopt correct_all
+unsetopt CORRECT
+
+
+
+# To customize prompt, run `p10k configure` or edit ~/.dotfiles/zsh/p10k.zsh.
+#[[ ! -f ~/.dotfiles/zsh/p10k.zsh ]] || source ~/.dotfiles/zsh/p10k.zsh
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# tabtab source for packages
+# uninstall by removing these lines
+# [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+
+#### FIG ENV VARIABLES ####
+# Please make sure this block is at the end of this file.
+# [ -s ~/dotfiles/fig/fig.sh ] && source ~/dotfiles/fig/fig.sh
+#### END FIG ENV VARIABLES ####
+
+#### FIG ENV VARIABLES ####
+# Please make sure this block is at the end of this file.
+[ -s ~/.fig/fig.sh ] && source ~/.fig/fig.sh
+#### END FIG ENV VARIABLES ####
